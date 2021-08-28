@@ -23,10 +23,10 @@ module.exports = (req, res, next) => {
     if (!/^Bearer$/i.test(schema))
         return res.status(401).send({ error: "Token mal formatado" });
 
-    jwt.verify(token, authConfig.secret, (error, user) => {
+    jwt.verify(token, authConfig.secret, (error, decoded) => {
         if (error) return res.status(401).send({ error: "Token invalido" });
 
-        req.userId = user.id;
+        req.userId = decoded.id;
         return next();
     });
 };
