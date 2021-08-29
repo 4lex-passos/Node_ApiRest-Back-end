@@ -18,6 +18,9 @@ const UserSchema = new mongoose.Schema({
         //NÂO RETORNA A SENHA EM UMA REQUISIÇÃO:
         select: false,
     },
+    avatar_URL: {
+        type: String,
+    },
     createAlt: {
         type: Date,
         default: Date.now,

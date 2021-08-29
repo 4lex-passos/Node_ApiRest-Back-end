@@ -23,7 +23,6 @@ try {
 mongoose.Promise = global.Promise;
 
 require("./src/controllers/authController")(app);
-require("./src/controllers/projectsController")(app);
 
 var PORT = process.env.PORT || 8080;
 

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/users.model");
 const authConfig = require("../config/auth");
+const authMiddleware = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -57,6 +58,11 @@ router.post("/authenticate", async (req, res) => {
     //
 
     return res.send({ user, token: generateToken({ id: user.id }) });
+});
+
+// ATUALIZAR USUÁRIO ============================//
+router.get("/recover", authMiddleware, (req, res) => {
+    res.status(200).send({ access: true, user: req.userId });
 });
 
 module.exports = (app) => app.use("/auth", router);
