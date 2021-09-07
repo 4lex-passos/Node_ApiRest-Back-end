@@ -48,10 +48,12 @@ router.post("/authenticate", async (req, res) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user)
-        return res.status(400).send({ message: "Usuário não encontrado" });
+        return res
+            .status(400)
+            .send({ error: true, message: "Usuário não encontrado" });
 
     if (!(await bcryptjs.compare(password, user.password)))
-        return res.status(400).send({ message: "Senha Inválida" });
+        return res.status(400).send({ error: true, message: "Senha Inválida" });
 
     //ESCONDE A SENHA NA REQUISIÇÃO:
     user.password = undefined;
@@ -62,7 +64,16 @@ router.post("/authenticate", async (req, res) => {
 
 // ATUALIZAR USUÁRIO ============================//
 router.get("/recover", authMiddleware, (req, res) => {
-    res.status(200).send({ access: true, user: req.userId });
+    User.findById(req.userId).then((user) => {
+        if (!user) {
+            res.status(404).send({
+                erro: true,
+                message: `Não foi possivel atualizar o Usuário=${user.name}. Talvez o Usuário não exista`,
+            });
+        } else {
+            res.status(200).send({ user });
+        }
+    });
 });
 
 module.exports = (app) => app.use("/auth", router);
